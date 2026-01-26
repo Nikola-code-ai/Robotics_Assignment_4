@@ -42,6 +42,16 @@ Refer to the demo requirement section at the end of the milestone assignment on 
 
 ---
 
+### Objects Provided
+
+In order to complete the demonstration requirements outlined below, we are providing you with a few objects. The objects provided are shown below.
+
+* Bottle
+* Bear Doll
+* Computer Mouse
+
+These object was chosen after testing with generic MS COCO trained yolo v11 on various angles and distances for the most stable inference results. You will find that under certain conditions, YOLO can detect but mislabel objects. You might have to consider multiple labels from YOLO’s COCO dataset to be a particular object of interest (e.g., a Teddy bear can be detected as a donut if the camera view is not just right. You can have some logic, such as if teddy bear and donut, this is a bear doll).
+
 ### Part 1: Object Detection on Jetson with CUDA 
 
 Part 1 will show you how to run YOLO, a popular object detection and localization algorithm on the Jetson NX. Jetson allows developers to start developing Artificial Intelligence applications on Edge devices with familiar tools present on a normal desktop environment for Nvidia GPUs.
