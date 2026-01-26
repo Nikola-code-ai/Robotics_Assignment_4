@@ -31,7 +31,7 @@ Please head here for an introduction to the YOLO Computer Vision Object Detectio
 
 ### Assignment requirement
 
-Assignment 4 requires a physical demonstration in front of Professor Tsz-Chiu Au. Please arrange a time with him for a physical demonstration. You need to demonstrate that you can integrate what you have learned about ROS2 and turtlebot, YOLO, Whisper, and LLM for missions outlined in milestone 6. The grading for this assignment will be divided into three parts. Please submit the source code of your program after the demo.
+Assignment 4 requires a physical demonstration in front of Professor Tsz-Chiu Au. Please arrange a time with him for a physical demonstration. You need to demonstrate that you can integrate what you have learned about ROS2 and turtlebot and YOLO for missions outlined in milestone 4. The grading for this assignment will be divided into three parts. Please submit the source code of your program after the demo.
 
 You need to demonstrate that you can utilize YOLO for your needs based on the requirements. 
 
