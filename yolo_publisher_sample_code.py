@@ -3,7 +3,7 @@
 
 # YOLO Publisher code for Jetson NX.
 
-# This code will give you an introduction to coding in ROS2. This code will run as-is, but you are required to modify it for the assignment requirement and submit the source code on Canvas.
+# This code will give you an introduction to coding in ROS2. You are required to modify it for the assignment requirement and submit the source code on Canvas.
 
 # Refer to the Lab PowerPoint materials and Appendix of Assignment 3 to learn more about coding on ROS2 and the hardware architecture of Turtlebot3.
 # You have to run this code on Turtlebot3 Nvidia Jetson.
