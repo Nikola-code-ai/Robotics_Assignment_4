@@ -136,7 +136,7 @@ Take a look at the provided publisher and subscriber script for YOLO in the git 
 
 Onvr you have finished coding your publisher and subscriber by completing the skeleton code, execute the example code for the publisher on the Turtlebot Jetson, and execute the example code for the subscriber either on the Turtlebot Jetson or the Remote PC to test the functionality of the code.
 
-Here is what you can expect from the completed skeleton code. **Note that launching the publisher for the first time would take a lot of time, since it needs to download the weights from the internet.**
+Here is what you can expect from the completed skeleton code. **Note that launching the publisher for the first time would take a lot of time, since it needs to download the weights from the internet.** You can disconnect from the internet and connect back to small_blue_wifi once you are done downloading the weights from the initial run. 
 
 **Publisher(Option1:CUDA)**
 ```
