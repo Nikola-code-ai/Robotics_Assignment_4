@@ -266,7 +266,7 @@ For part C's b), you need to extend a)’s code so that the Turtlebot 3 faces th
 
 * c): Pick and Place with Turtlebot (Task 2) -20 points
 
-For part C's b), you need to extend a)’s code so that the Turtlebot 3 returns to the base you define after picking up the bottle, and release the bottle on the ground at the home base near the robot's starting location. To test, refer to part C's b). 
+For part C's c), you need to extend a)’s code so that the Turtlebot 3 returns to the base you define after picking up the bottle, and release the bottle on the ground at the home base near the robot's starting location. To test, refer to part C's b). 
 
 ---
 
@@ -349,13 +349,16 @@ You might have noticed that the provided code is different from the normal code 
 
 **Camera connection for Jetson**
 The first major difference is how we connected the camera to the Jetson. Instead of using a USB connection to a normal webcam, we use the MIPI CSI (Camera Serial Interface) port on the Jetson to connect to a camera at a lower level. The CSI port is a direct, high-bandwidth connection to the Jetson's dedicated Image Signal Processor (ISP).
+
 By using the CSI port, the raw image data bypasses the slow, general-purpose USB controller and goes straight into the ISP. The ISP handles critical pre-processing tasks like de-Bayering (converting raw sensor data to a color image), color correction, and noise reduction using dedicated hardware. This frees the CPU from doing any of this initial heavy lifting and, most importantly, achieves lower photon-to-response latency.
 In practice, this changes how the camera is accessed through code. The gst string in your code is actually a command that builds a hardware-accelerated video processing pipeline using GStreamer. More specifically, we use nvarguscamerasrc, which is a GStreamer plugin specifically designed for cameras connected to the MIPI CSI (Camera Serial Interface) port on the Jetson.
+
 Let us break down the pipeline illustrated in gst string in more detail. As mentioned, nvarguscamerasrc captures video from the CSI/ISP hardware. video/x-raw(memory:NVMM) is arguably the most important performance trick in the pipeline. NVMM (NVIDIA Managed Memory) tells the system to keep the video frame entirely within the GPU/SoC's memory space. The frame is never copied to the CPU's main RAM. This concept, often called "zero-copy," is a massive performance win because moving large video frames between CPU and GPU memory is a slow, performance-killing bottleneck. nvvidconv is a hardware-accelerated video converter. Tasks like resizing the video (e.g., from 1080p to 480p) or changing the color format (e.g., from the camera's native format to the BGR format needed by OpenCV) are performed by the Jetson's dedicated video engine, not the CPU.
+
 Therefore, by making Jetson-specific modifications to the Python code, your Python code can have all the capturing, pre-processing, and format conversion already been done efficiently in hardware. This means that by the frame is available from appsink, the frame would already be waiting in a GPU-accessible memory location for your use.
 
 **Camera Sensor Modes for Raspberry Pi v2 camera**
-The Raspberry Pi Camera Module v2 (IMX219) has several sensor modes available on the NVIDIA Jetson Xavier NX, but they are often grouped into a few commonly used configurations accessible through the driver. The specific modes you can use depend on the camera driver (like nvarguscamerasrc for GStreamer) and the software you're using. Using different sensor modes allows you to access outputs of the camera sensor with different frame rate, field of view and bit depth. The following figure illustrates this concept very well, but with a different Single Board Computer, Raspberry Pi. This means Jetson does not have the exact sensor modes that this figure illustrates.
+The Raspberry Pi Camera Module v2 (IMX219) has several sensor modes available on the NVIDIA Jetson Xavier NX, but they are often grouped into a few commonly used configurations accessible through the driver. The specific modes you can use depend on the camera driver (like nvarguscamerasrc for GStreamer) and the software you're using. Using different sensor modes allows you to access outputs of the camera sensor with different frame rate, field of view and bit depth. 
 
 On Jetson, the following modes are accessible for user’s applications.
 
@@ -364,6 +367,7 @@ On Jetson, the following modes are accessible for user’s applications.
 * **Mode 4 (1280x720 @ 120 FPS):** This is the high frame rate mode, ideal for slow-motion capture. It achieves this speed by using 2x2 binning on the sensor, which groups pixels together. This results in a "partial" or cropped field of view compared to the other modes.
 
 **OpenCV for Jetson**
+
 While the OpenCV you are using is similar to the OpenCV you are using for other computer science classes, we needed to compile from source to exploit the hardware on the Jetson. This is because a binary install of OpenCV from pip is CPU-only and is not configured well.
 In particular, you need to enable particular sets of plugins during source compilation. We leave some of them here. A good optional exercise for the reader is to find out what each flag does and how it fits within our robot assignment. Note: Jetson Xavier series has 7.2 for CUDA_ARCH_BIN.
 
@@ -386,18 +390,23 @@ cmake \
 **Jetson AI Inference and TensorRT Exploitation**
 
 Let's now look at part of the code dealing with .pt file and .engine file.
+
 A .pt file is a standard model from the PyTorch framework. It's flexible and contains the model's architecture and weights. When you run it, the PyTorch framework interprets this file to perform the calculations. It's portable but not optimized for any specific hardware.
 An .engine file is the result of taking the .pt blueprint and compiling it with NVIDIA TensorRT SDK. A wrapper from Ultralytics takes care of the specifics in utilizing TensorRT. TensorRT is an optimizer that aggressively modifies the model to run as fast as possible on a specific NVIDIA GPU—in this case, your Jetson's integrated GPU.
+
 This "export" step performs several key optimizations using the TensorRT SDK:
 
 * **Layer Fusion:** It combines multiple simple AI layers (e.g., a convolution, a bias, and an activation) into a single, highly efficient custom operation. By fusing multiple computational operations into a single operation, we can achieve higher inference speed. We also set up so that during the inference process, we exploit Nvidia’s Tensor Cores, a dedicated part of the silicon that supports operations such as Fused Multiply Add, a common operation during AI inference.
-* **Suggested Reading:** [https://developer.nvidia.com/blog/programming-tensor-cores-cuda-9/](https://developer.nvidia.com/blog/programming-tensor-cores-cuda-9/)
+* **Tensor Cores:** Suggested Reading: [https://developer.nvidia.com/blog/programming-tensor-cores-cuda-9/](https://developer.nvidia.com/blog/programming-tensor-cores-cuda-9/)
 * **Precision Calibration:** Also known as quantization, it can convert calculations from slow 32-bit numbers to much faster 16-bit (FP16) or 8-bit (INT8) numbers, often with little to no loss in accuracy.
 * **Kernel Auto-Tuning:** It selects the fastest possible algorithms for your specific Jetson GPU.
 
 In order to do this, you need some setup in addition to the Jetpack software that contains the TensorRT SDK. That part was done by the IA.
 
 **Pytorch and TorchVision for Jetson**
+
 The pre-compiled versions of PyTorch available on the standard Python Package Index (PyPI) are built for desktop computers, which almost always use an x86_64 CPU architecture (from Intel or AMD). The NVIDIA Jetson, however, uses an ARM64 CPU architecture, similar to what's in modern smartphones or Apple Silicon Macs. Therefore, NVIDIA provides PyTorch wheels (.whl files) that have been specifically compiled for the Jetson's ARM64 architecture so they can run correctly.
+
 You also need to ensure compatibility with Jetpack. The Jetson's operating system, a customized Ubuntu operating system called JetPack, includes specific versions of CUDA, cuDNN, and TensorRT that are tailored for its mobile, power-efficient GPU. NVIDIA’s custom PyTorch builds are specifically compiled and linked against these exact libraries. This ensures a stable and high-performance bridge between the PyTorch framework and the GPU hardware. Also, during compilation, NVIDIA enables specific flags and optimizations that take advantage of the unique features of the Jetson's GPU, which are different from a desktop GPU like an RTX 4090.
+
 Therefore, when installing PyTorch and TorchVision for Jeston, you need to match your Python version and your specific Jetpack version. This effectively means you would be installing an older version of Pytorch and TorchVision on Jetson, and problems with that, such as an older version of Numpy. You need to make sure which version works with which version when working with Jetson. That part was done for you by the IA.
