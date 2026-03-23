@@ -38,12 +38,14 @@ class YoloJsonSubscriber(Node):
         try:
             ###############################################################
             # TODO 3: Parse the incoming JSON string back into a usable Python dictionary
-            # Hint: The string is stored in msg.data. Use json.loads()
+            # Hint: The string is stored in msg.data. Use json.loads() on msg.data
             # data = 
           
             ###############################################################
             
             # Extract the metadata
+            # We have done this part for you.
+            
             timestamp = data.get("timestamp", 0.0)
             frame_id = data.get("frame_id", "unknown")
             detections = data.get("detections", [])
@@ -71,13 +73,17 @@ class YoloJsonSubscriber(Node):
             self.get_logger().error(f"Failed to parse JSON string: {e}")
 
 def main(args=None):
-    rclpy.init(args=args)
+    ###############################################################
+    # TODO 5: Initialize the ROS 2 Python client library
+    # Hint: rclpy.init with necessary arguments (args)
+    
+    ###############################################################
     node = YoloJsonSubscriber()
     
     try:
         ###############################################################
-        # TODO 5: Spin the node so it stays alive to listen for incoming messages
-        # Hint: rclpy.spin(your_node_variable)
+        # TODO 6: Spin the node so it stays alive and continues to trigger the timer
+        # Hint: rclpy.spin with the necessary arguments that define what to spin
         
         ###############################################################
     except KeyboardInterrupt:

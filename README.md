@@ -1,6 +1,6 @@
 # 2026 CS 4379K / CS 5342 Introduction to Autonomous Robotics, Robotics and Autonomous Systems
 
-## Programming Assignment: Milestone 4 (V1.0)
+## Programming Assignment: Milestone 4 (V1.05)
 
 **Minhyuk Park and Tsz-Chiu Au**
 
@@ -30,13 +30,28 @@ Please head here for an introduction to the YOLO Computer Vision Object Detectio
 
 **Source Code Submission** is required for Milestone Assignment 4 on Canvas.
 
-Assignment 4 requires a physical demonstration in front of Professor Tsz-Chiu Au. Please arrange a time with him for a physical demonstration. You need to demonstrate that you can integrate what you have learned about ROS2 and turtlebot and YOLO for missions outlined in milestone 4. The grading for this assignment will be divided into three parts. Please submit the source code of your program after the demo.
+In addition, as usual, a **hardware video demonstration submission** is required for Milestone Assignment 4. 
 
-You need to demonstrate that you can utilize YOLO for your needs based on the requirements. 
+You need to demonstrate that you have a working setup and can operate the turtlebot by making videos. This will also demonstrate that you have a working setup for working with a physical turtlebot. Refer to the demo requirement section at the end of the milestone assignment on what to include in the video.
+
+**[SUBMISSION RULES]**
+
+* **Individual Submission:** **Every team member must submit the video link(s) separately to Canvas.** If the video is duplicated within a team, that is acceptable; however, this ensures that only active participants who have access to the team’s recordings can receive credit. 
+
+* **Standardized Hosting:** **To manage file sizes, do not upload raw video files (e.g., MP4) directly to Canvas.** Instead, **upload your videos to YouTube (set as "Unlisted")** and submit the links via a document.
+
+### Video Demo Requirements
+
+Your group will **record** one or more video clips. The estimated total length of the video clips is approximately three and a half minutes. **While you do not need to perform complex editing, please keep the total duration to a few minutes to ensure it remains concise.** One group member should narrate the video, explaining each step as it's performed. At the beginning of the first video clip, please show every group member's face and state the names of all group members.
+
+Your recording setup should be organized to show all relevant windows at once: the terminal(s) used for launching nodes, the Gazebo simulation window, and the RViz visualization window.
+
+You do not need to edit the videos, and uploading raw **footage** will suffice. You can split the demonstration into multiple videos **if necessary to show different parts of the requirement.** 
 
 Refer to the demo requirement section at the end of the milestone assignment on what to include in the demo. Rules for robot usage will apply for working with the physical Turtlebot3. Please refer to the inventory list given to you separately.
 
 > **Major Changes**
+> * v 1.05  A lot of requested changes
 > * v 1.0  Initial public release
 
 ---
@@ -90,21 +105,6 @@ python3 yolov11_demo.py
 ```
 
 
-5. **[Turtlebot Nvidia Jeston]** Run yolo v11 seg demo and point the camera in front of the robot at various objects. You should see real-time bounding boxes, class labels, and binary masks of each object showing which object each pixel belongs to.
-```bash
-python3 yolov11_seg_demo.py
-
-```
-
-
-6. **[Turtlebot Nvidia Jeston]** Run yolo v11 pose demo and point the camera in front of the robot at people. You should see real-time human skeleton detection.
-```bash
-python3 yolov11_Pose_demo.py
-
-```
-
-
-
 **[Optional][Turtlebot Nvidia Jeston]** YOLO has different sized models with different computational requirements for real-time performance. We encourage you to experiment with different models for each script by replacing the names for engine and pt with different model names corresponding to size of the models. Listed from smallest to largest, these models trade inference speed and accuracy. After you replace the names, the Ultralytics package will automatically download and generate relevant files for you. Note that your frame per second would be bottlenecked by the camera’s sensor mode.
 
 Relevant code section. Please change names of both pt and engine files.
@@ -126,176 +126,147 @@ yolo11x.pt    yolo11x.engine
 
 ```
 
-**YOLO v11 seg**
+---
 
-```text
-yolo11n-seg.pt    yolo11n-seg.engine
-yolo11s-seg.pt    yolo11s-seg.engine
-yolo11m-seg.pt    yolo11m-seg.engine
-yolo11l-seg.pt    yolo11l-seg.engine
-yolo11x-seg.pt    yolo11x-seg.engine
+### Part 2: Programming a publisher and a subscriber for YOLO
+
+In order to complete part 3, you need to learn how to use ROS 2 to command the turtlebot using your own program. 
+
+Take a look at the provided publisher and subscriber script for YOLO in the git repository. We are giving you sample codes, one for the subscriber and one for the publisher, to get you started. 
+
+Onvr you have finished coding your publisher and subscriber by completing the skeleton code, execute the example code for the publisher on the Turtlebot Jetson, and execute the example code for the subscriber either on the Turtlebot Jetson or the Remote PC to test the functionality of the code.
+
+Here is what you can expect from the completed skeleton code. Note that launching the publisher for the first time would take a lot of time, since it needs to download the weights from the internet.
+
+**Publisher(Option1:CUDA)**
+```
+[INFO] [1774133694.824883296] [yolo_json_publisher]: Loading YOLOv11 model on CUDA...
+Downloading https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11n.pt to 'yolo11n.pt'...
+100%|██████████████████████████████████████| 5.35M/5.35M [00:00<00:00, 9.65MB/s]
+[INFO] [1774133708.662359424] [yolo_json_publisher]: Initializing CSI Camera...
+GST_ARGUS: Creating output stream
+CONSUMER: Waiting until producer is connected...
+GST_ARGUS: Available Sensor modes :
+GST_ARGUS: 3280 x 2464 FR = 21.000000 fps Duration = 47619048 ; Analog Gain range min 1.000000, max 10.625000; Exposure Range min 13000, max 683709000;
+
+GST_ARGUS: 3280 x 1848 FR = 28.000001 fps Duration = 35714284 ; Analog Gain range min 1.000000, max 10.625000; Exposure Range min 13000, max 683709000;
+
+GST_ARGUS: 1920 x 1080 FR = 29.999999 fps Duration = 33333334 ; Analog Gain range min 1.000000, max 10.625000; Exposure Range min 13000, max 683709000;
+
+GST_ARGUS: 1640 x 1232 FR = 29.999999 fps Duration = 33333334 ; Analog Gain range min 1.000000, max 10.625000; Exposure Range min 13000, max 683709000;
+
+GST_ARGUS: 1280 x 720 FR = 59.999999 fps Duration = 16666667 ; Analog Gain range min 1.000000, max 10.625000; Exposure Range min 13000, max 683709000;
+
+GST_ARGUS: Running with following settings:
+   Camera index = 0
+   Camera mode  = 4
+   Output Stream W = 1280 H = 720
+   seconds to Run	= 0
+   Frame Rate = 59.999999
+GST_ARGUS: Setup Complete, Starting captures for 0 seconds
+GST_ARGUS: Starting repeat capture requests.
+CONSUMER: Producer has connected; continuing.
+[ WARN:0@42.505] global /home/nvidia/workspace/opencv-4.6.0/modules/videoio/src/cap_gstreamer.cpp (1405) open OpenCV | GStreamer warning: Cannot query video position: status=0, value=-1, duration=-1
 
 ```
+**Publisher(Option2:TensorRT_Optimized)**
+```
+[INFO] [1774134507.980644608] [yolo_json_publisher]: Loading YOLOv11 model on CUDA...
+WARNING ⚠️ Unable to automatically guess model task, assuming 'task=detect'. Explicitly define task for your model, i.e. 'task=detect', 'segment', 'classify','pose' or 'obb'.
+[INFO] [1774134507.984752448] [yolo_json_publisher]: Initializing CSI Camera...
+GST_ARGUS: Creating output stream
+CONSUMER: Waiting until producer is connected...
+GST_ARGUS: Available Sensor modes :
+GST_ARGUS: 3280 x 2464 FR = 21.000000 fps Duration = 47619048 ; Analog Gain range min 1.000000, max 10.625000; Exposure Range min 13000, max 683709000;
 
-**YOLO v11 pose**
+GST_ARGUS: 3280 x 1848 FR = 28.000001 fps Duration = 35714284 ; Analog Gain range min 1.000000, max 10.625000; Exposure Range min 13000, max 683709000;
 
-```text
-yolo11n-pose.pt    yolo11n-pose.engine	
-yolo11s-pose.pt    yolo11s-pose.engine	
-yolo11m-pose.pt    yolo11m-pose.engine	
-yolo11l-pose.pt    yolo11l-pose.engine	
-yolo11x-pose.pt    yolo11x-pose.engine	
+GST_ARGUS: 1920 x 1080 FR = 29.999999 fps Duration = 33333334 ; Analog Gain range min 1.000000, max 10.625000; Exposure Range min 13000, max 683709000;
+
+GST_ARGUS: 1640 x 1232 FR = 29.999999 fps Duration = 33333334 ; Analog Gain range min 1.000000, max 10.625000; Exposure Range min 13000, max 683709000;
+
+GST_ARGUS: 1280 x 720 FR = 59.999999 fps Duration = 16666667 ; Analog Gain range min 1.000000, max 10.625000; Exposure Range min 13000, max 683709000;
+
+GST_ARGUS: Running with following settings:
+   Camera index = 0
+   Camera mode  = 4
+   Output Stream W = 1280 H = 720
+   seconds to Run	= 0
+   Frame Rate = 59.999999
+GST_ARGUS: Setup Complete, Starting captures for 0 seconds
+GST_ARGUS: Starting repeat capture requests.
+CONSUMER: Producer has connected; continuing.
+[ WARN:0@9.734] global /home/nvidia/workspace/opencv-4.6.0/modules/videoio/src/cap_gstreamer.cpp (1405) open OpenCV | GStreamer warning: Cannot query video position: status=0, value=-1, duration=-1
+Loading yolo11n.engine for TensorRT inference...
+[03/21/2026-18:08:39] [TRT] [I] Loaded engine size: 13 MiB
+[03/21/2026-18:08:39] [TRT] [W] Using an engine plan file across different models of devices is not recommended and is likely to affect performance or even cause errors.
+[03/21/2026-18:08:45] [TRT] [I] [MemUsageChange] Init cuDNN: CPU +342, GPU +237, now: CPU 717, GPU 4728 (MiB)
+[03/21/2026-18:08:45] [TRT] [I] [MemUsageChange] TensorRT-managed allocation in engine deserialization: CPU +0, GPU +14, now: CPU 0, GPU 14 (MiB)
+[03/21/2026-18:08:46] [TRT] [I] [MemUsageChange] Init cuDNN: CPU +0, GPU +0, now: CPU 704, GPU 4730 (MiB)
+[03/21/2026-18:08:46] [TRT] [I] [MemUsageChange] TensorRT-managed allocation in IExecutionContext creation: CPU +0, GPU +142, now: CPU 0, GPU 156 (MiB)
+
 
 ```
+**Subscriber**
+```
+nvidia@nvidia-desktop:~$ python3 sub.py
+[INFO] [1774133827.058645760] [yolo_json_subscriber]: Listening for YOLO JSON detections...
+[INFO] [1774133827.062601856] [yolo_json_subscriber]: Received 1 detections at t=1774133826.99 [camera_link]:
+[INFO] [1774133827.064806720] [yolo_json_subscriber]:   [0] book (0.32) | Center: (689.2, 239.0), Size: 474.2x196.6
+
+
+```
+### Part 3: Programming a Custom Script for Physical Turtlebot3 Bottle Pick and Place
+
+In part 3, you need to extend your teleoperation code in Assignment 3 and ROS2 subscriber code in Assignment 4 to make the turtlebot autonomously detect, approach, and pick up and place the bottle from and to the ground. 
+
+In order to complete part 3, you need to learn how to use ROS 2 to command the turtlebot using your own program. 
+
+To turn the turtlebot on its place, apply angular velocity in the Z axis so that the turtlebot can turn left or right.
+
+To move the turtlebot forward and backward, apply linear velocity so that the turtlebot can move forward or backward.
+
+In order for the turtlebot to react to the camera input, you would need to subscribe to the YOLO output from the publisher you coded in Part 2, and apply control inputs to the turtlebot so that the target object, the bottle, stays at the center of the camera's field of view. Not only do you have to adjust the rotation of the turtlebot, but you would also need to drive forward and backward so that the detection box in pixel coordinates is in a certain range that you determined from your own experimentation. 
+
+To pick up the bottle with the robot arm, move the robot arm to home pose, open the gripper, extend the arm forward, close the gripper, and retract the arm to the home position. Do the reverse for placing the bottle on the ground.
 
 ---
 
-### Part 2 Object Detection on Jetson with NPU
+### Demo Requirements (3.5-4 Minute Demonstration) - 100 points
 
-Part 2 will show you how to run YOLO on Hailo 8 NPU. Hailo 8 can be installed on any edge computer with support for a PCI-E 4x interface. This means it can be installed at a slot normally reserved for NVME SSDs and achieve real-time performance.
+Please refer to the video submission requirements in the introduction.
 
-To quote the manufacturer, the Hailo-8 edge AI processor, featuring up to 26 tera-operations per second (TOPS), significantly outperforms all other edge processors. Its area and power efficiency are far superior to other leading solutions by a considerable order of magnitude, at a size smaller than a penny, even including the required memory. With an architecture that takes advantage of the core properties of neural networks, Hailo 8 neural chip allows edge devices to run deep learning applications at full scale more efficiently, effectively, and sustainably than other AI chips and solutions, while significantly lowering costs.
+Your submission must include two items: **links to the video file and a single .zip file containing all of your source code**.
 
-The following instruction was adopted from Hailo 8 examples git repository. The provided code is modified code from the following git that takes in Pi v2 camera feed.
-[https://github.com/hailo-ai/Hailo-Application-Code-Examples/tree/main/runtime/hailo-8/python/object_detection](https://github.com/hailo-ai/Hailo-Application-Code-Examples/tree/main/runtime/hailo-8/python/object_detection)
-
-This assumes that you have a working setup from Milestone Assignment 1 Part 1. Please execute all instructions with **[Remote PC]** on Docker shell. Note that you have to enable GUI and start the Docker container by following instruction from Milestone Assignment 1. Please execute all instructions with **[Turtlebot Nvidia Jetson]** on Turtlebot Jetson's native bash shell without Docker.
-
-1. **[Turtlebot Nvidia Jeston]** Whenever you are running an application using the Hailo accelerator, you can check the status of the Hailo accelerator using this command on another terminal window.
-```bash
-hailortcli monitor
-
-```
-
-
-2. **[Turtlebot Nvidia Jeston]** Assuming you have downloaded the files, go to the hailo_demo folder in a new terminal window.
-```bash
-cd ~/Robotics_Assignment_4/Assignment_4_demo/Hailo-Application-Code-Examples/runtime/hailo-8/python/object_detection
-
-```
-
-
-3. **[Turtlebot Nvidia Jeston]** Open a new terminal and set the following environment variable to enable hailortcli monitor to monitor on that particular terminal.
-```bash
-# 1. Set the environment variable for this terminal session
-export HAILO_MONITOR=1
-
-```
-
-
-4. **[Turtlebot Nvidia Jeston]** Run yolo v8 demo on the terminal window you just export  and point the camera in front of the robot at various objects. You should see real-time bounding boxes and class labels.
-```bash
-python3 object_detection.py -n yolov8s.hef -i camera
-
-```
-
-
-
-**[Optional][Turtlebot Nvidia Jeston]** We encourage you to experiment with different models for each script by replacing the names for engine and pt with different model names corresponding to size of the models.
-
-**YOLO v11 base**
-
-yolo11n
-
-```bash
-wget https://hailo-model-zoo.s3.eu-west-2.amazonaws.com/ModelZoo/Compiled/v2.17.0/hailo8/yolov11n.hef
-python3 object_detection.py -n yolov11n.hef -i camera
-
-```
-
-yolo11s
-
-```bash
-wget https://hailo-model-zoo.s3.eu-west-2.amazonaws.com/ModelZoo/Compiled/v2.17.0/hailo8/yolov11s.hef
-python3 object_detection.py -n yolov11s.hef -i camera
-
-```
-
-yolo11m
-
-```bash
-wget https://hailo-model-zoo.s3.eu-west-2.amazonaws.com/ModelZoo/Compiled/v2.17.0/hailo8/yolov11m.hef
-python3 object_detection.py -n yolov11m.hef -i camera
-
-```
-
-yolo11l
-
-```bash
-wget https://hailo-model-zoo.s3.eu-west-2.amazonaws.com/ModelZoo/Compiled/v2.17.0/hailo8/yolov11l.hef
-python3 object_detection.py -n yolov11l.hef -i camera
-
-```
-
-yolo11x
-
-```bash
-wget https://hailo-model-zoo.s3.eu-west-2.amazonaws.com/ModelZoo/Compiled/v2.17.0/hailo8/yolov11x.hef
-python3 object_detection.py -n yolov11x.hef -i camera
-
-```
-
----
-
-### Part 3: Programming a publisher and a subscriber for YOLO
-
-In order to complete part 3, you need to learn how to use ROS 2 to command the turtlebot using your own program. Refer to the Assignment 3 Appendix for help regarding this process. Take a look at the provided publisher and subscriber script for YOLO in the git repository.
-
-We are giving you sample codes, one for the subscriber and one for the publisher, to get you started.
-
----
-
-### Demo Requirements (10-15 Minute Demonstration) - 100 points
-
-We will allow you to have multiple attempts for each demo. For additional accommodations necessary, please contact IA or the professor.
-Your submission must include a single .zip file containing all of your source code.
-
-**Part A: YOLOv11 Demonstration on Jetson GPU -20 points**
+**Part A: YOLOv11 Demonstration on Jetson GPU -10 points**
 This part demonstrates your ability to run various YOLOv11 models on the Jetson's GPU using a live camera feed.
 
-* **Object Detection (YOLOv11):** Run the standard YOLOv11 detection model. Point the camera at several different objects (e.g., a person, a bottle, a laptop) and show the model drawing accurate bounding boxes and class labels in real-time.
-* **Pose Estimation (YOLOv11-Pose):** Run the pose estimation model. Have a group member step in front of the camera and show the model successfully detecting the person and overlaying the pose skeleton (the lines connecting joints).
-* **Segmentation (YOLOv11-Seg):** Run the segmentation model. Point the camera at multiple objects and show the model generating distinct color masks for each detected instance, demonstrating pixel-level recognition.
-* **Prove CUDA Usage:** This is a critical step. While the YOLOv11 models are running, open a new terminal and run `tegrastats`. You must show the output of `tegrastats`, which should indicate that the CUDA cores are active and under load, confirming that inference is running on the CUDA cores.
+* **Object Detection (YOLOv11):** Run the standard YOLOv11 detection model. Point the camera at several different objects (e.g., a person, a bottle, a laptop) and show the model drawing accurate bounding boxes and class labels in real-time with a given demo code.
 
-**Part B: YOLO Base Demonstration on Hailo NPU -10 points**
-This section proves you can offload inference to the Hailo-8 NPU for acceleration.
+* **Prove CUDA Usage:** While the YOLOv11 models are running, open a new terminal and run `tegrastats`. You must show the output of `tegrastats`, which should indicate that the CUDA cores are active and under load, confirming that inference is running on the CUDA cores.
 
-* **Launch Model:** Run any YOLO object detection model that is specifically compiled for the Hailo-8 NPU.
-* **Demonstrate Detection:** Show the model performing real-time object detection on the live camera feed, similar to Part A.
-* **Prove NPU and SOC Usage:** While the YOLO model is running, open a new terminal and run a Hailo utility command `hailocli monitor`. You must show the output of this command along with `tegrastats`, which should indicate that the Hailo NPU is active and under load while Jetson systems are under relatively low load, confirming that inference is running on the accelerator.
+**Part B: YOLOv11 Demonstration on Jetson GPU -20 points**
 
-**Part C: ROS2 Publisher & Subscriber Demonstration -  -70 points**
+* **Publisher and Subscriber (YOLOv11):** Run the completed sample code for YOLOv11 publisher and subscriber. Point the camera at several different objects (e.g., a person, a bottle, a laptop) and show that two different programs can exchange necessary information over ROS2.
 
-This part showcases your ability to integrate the given ROS2 code for a robotic task.
+**Part C: ROS2 Publisher & Subscriber Demonstration With Physical Turtlebot -  -70 points**
 
-Slides detailing the arena and detailed rules will be released separately.
+This part showcases your ability to integrate the given ROS2 codes for a robotic task.
 
-* a): Demonstrating Visual Servoing to a Bottle (Task 1) -10 points
+* a): Demonstrating Visual Servoing to a Bottle (Task 1) -20 points
 
 For part C's a), you need to code a visual servoing code that turns the wheels of the Turtlebot 3 so that the front of the robot faces the target object, a bottle.
 
-Demonstrate your code by moving the bottle slowly in front of the robot. The robot should lock onto the bottle using the front camera.
+Demonstrate your code by moving the bottle slowly in front of the robot. The robot should "lock onto" the bottle and attempt to keep the subject at the center of the camera's field of view using the robot's wheels to turn left and right.
 
-To complete this requirement, you would need to adapt milestone 3’s teleoperation code and milestone 4’s code for YOLO and integrate them into the code for both the remote PC and Jetson. We recommend using SSH to access the Turtlebot’s Jetson, since the number of Flipbooks is limited.
+* b): Pick the bottle with Turtlebot (Task 1) -30 points
 
-* b): Pick the bottle with Turtlebot (Task 1) -10 points
+For part C's b), you need to extend a)’s code so that the Turtlebot 3 faces the bottle, drives towards the bottle, extends the arm, grabs onto the bottle, and lifts it off the ground. You can achieve this by publishing twist messages to control the wheels and using an action server and client to control the arm in the joint space. To test, place the bottle on the ground in the field of view of the Turtlebot's camera, but slightly off-center. 
 
-For part C's b), you need to extend a)’s code so that the Turtlebot 3 drives to the bottle, faces the bottle, extends the arm and grab onto the bottle. You can use non-precise ways to achieve this, for example, by applying forward velocity on the wheels for a set time in an open-loop fashion.
-
-To complete this requirement, you would need to adapt milestone 3’s teleoperation code and milestone 4’s code for YOLO and integrate them into the code for both the remote PC and Jetson. We recommend using SSH to access the Turtlebot’s Jetson, since the number of Flipbooks is limited.
 
 * c): Pick and Place with Turtlebot (Task 2) -20 points
 
-For part C's b), you need to extend a)’s code so that the Turtlebot 3 returns to the base after picking up the bottle, and release the bottle on the ground at the home base near the robot's starting location. You can use non-precise ways to achieve this, for example, by applying forward velocity on the wheels for a set time in an open-loop fashion.
-
-To complete this requirement, you would need to adapt milestone 3’s teleoperation code and milestone 4’s code for YOLO and integrate them into the code for both the remote PC and Jetson. We recommend using SSH to access the Turtlebot’s Jetson, since the number of Flipbooks is limited.
-
-* d): Pick and Place two bottles with Turtlebot (Task 2) -30 points
-
-For part C's d), you need to extend c)’s code so that the Turtlebot 3 repeats the pick and place operation for a total of two bottles. You can use non-precise ways to achieve this, for example, by applying forward velocity on the wheels for a set time in an open-loop fashion.
-
-To complete this requirement, you would need to adapt milestone 3’s teleoperation code and milestone 4’s code for YOLO and integrate them into the code for both the remote PC and Jetson. We recommend using SSH to access the Turtlebot’s Jetson, since the number of Flipbooks is limited.
+For part C's b), you need to extend a)’s code so that the Turtlebot 3 returns to the base you define after picking up the bottle, and release the bottle on the ground at the home base near the robot's starting location. To test, refer to part C's b). 
 
 ---
 
@@ -413,6 +384,7 @@ cmake \
 ```
 
 **Jetson AI Inference and TensorRT Exploitation**
+
 Let's now look at part of the code dealing with .pt file and .engine file.
 A .pt file is a standard model from the PyTorch framework. It's flexible and contains the model's architecture and weights. When you run it, the PyTorch framework interprets this file to perform the calculations. It's portable but not optimized for any specific hardware.
 An .engine file is the result of taking the .pt blueprint and compiling it with NVIDIA TensorRT SDK. A wrapper from Ultralytics takes care of the specifics in utilizing TensorRT. TensorRT is an optimizer that aggressively modifies the model to run as fast as possible on a specific NVIDIA GPU—in this case, your Jetson's integrated GPU.
@@ -429,47 +401,3 @@ In order to do this, you need some setup in addition to the Jetpack software tha
 The pre-compiled versions of PyTorch available on the standard Python Package Index (PyPI) are built for desktop computers, which almost always use an x86_64 CPU architecture (from Intel or AMD). The NVIDIA Jetson, however, uses an ARM64 CPU architecture, similar to what's in modern smartphones or Apple Silicon Macs. Therefore, NVIDIA provides PyTorch wheels (.whl files) that have been specifically compiled for the Jetson's ARM64 architecture so they can run correctly.
 You also need to ensure compatibility with Jetpack. The Jetson's operating system, a customized Ubuntu operating system called JetPack, includes specific versions of CUDA, cuDNN, and TensorRT that are tailored for its mobile, power-efficient GPU. NVIDIA’s custom PyTorch builds are specifically compiled and linked against these exact libraries. This ensures a stable and high-performance bridge between the PyTorch framework and the GPU hardware. Also, during compilation, NVIDIA enables specific flags and optimizations that take advantage of the unique features of the Jetson's GPU, which are different from a desktop GPU like an RTX 4090.
 Therefore, when installing PyTorch and TorchVision for Jeston, you need to match your Python version and your specific Jetpack version. This effectively means you would be installing an older version of Pytorch and TorchVision on Jetson, and problems with that, such as an older version of Numpy. You need to make sure which version works with which version when working with Jetson. That part was done for you by the IA.
-
-#### [Optional Reading] Hailo 8 and NPUs for Edge AI
-
-**Hailo 8 Architecture and Compiler**
-Along with Jetson’s onboard GPU and CUDA capabilities, we are giving you access to Neural Processing Unit Hailo 8 as well. An NPU, or Neural Processing Unit, is a specialized hardware chip designed to efficiently accelerate Artificial Intelligence (AI) tasks, particularly neural network computations.
-The Hailo-8 is built on Hailo’s Structure-Defined Dataflow Architecture, which is fundamentally different from the architecture of a standard CPU or GPU. This design is what allows it to achieve very high performance in a small power envelope, making it ideal for edge AI applications.
-Think of a traditional processor (like a CPU or GPU) as a large, centralized workshop with powerful tools (the ALUs) and a big warehouse for materials (the RAM/cache). To perform a task, you constantly have to fetch materials from the warehouse, bring them to a tool, process them, and then send them back to the warehouse. This back-and-forth movement of data consumes a lot of time and energy.
-The Hailo-8's dataflow architecture works more like a physical assembly line. Instead of a central memory warehouse, the processing resources and memory are distributed across the chip. When a neural network is compiled for the Hailo-8, it's physically mapped onto this hardware assembly line. Data (like an input image) enters at one end, flows sequentially through the different processing stations (the hardware blocks for convolutions, activations, etc.), and the final result comes out the other end.
-This approach drastically minimizes data movement, which is the key to its efficiency.
-The Hailo-8's chip is made up of a grid of specialized hardware blocks:
-
-* **Compute Cores:** These are not general-purpose cores like on a CPU. Each core is a small, specialized engine designed to perform the mathematical operations common in neural networks, primarily multiply-accumulate (MAC) operations. They are the "workers" at each station on the assembly line.
-* **Distributed Memory Elements:** Instead of a large, shared L2/L3 cache, memory is broken up into many small, local SRAM blocks distributed across the chip, right next to the compute cores. This means each "worker" has a small tray of materials right at their station, eliminating the need to walk back and forth to a central warehouse.
-* **Control and Data Fabric:** This is a high-speed network-on-chip that acts as the "conveyor belt" of the assembly line. It is responsible for efficiently streaming data from one compute core and its local memory to the next, as defined by the structure of the neural network.
-* **Host Interface:** This component, typically using PCIe, manages communication with the host system (like a Jetson). It's responsible for receiving the input data from the host and sending the final inference results back.
-To exploit this dedicated hardware, you need a specialized compiler. The Hailo Dataflow Compiler is the software that takes a standard neural network (from TensorFlow, PyTorch, etc.) and figures out the most efficient way to map it onto the Hailo-8's physical hardware. It analyzes the network graph and decides:
-* Which compute cores will handle which layers of the network?
-* How to partition the model's weights and activations into the distributed memory blocks.
-* How to configure the data fabric (the "conveyor belt") to ensure data flows smoothly from one processing stage to the next.
-The output of this compiler is the .hef file, which is not just the model's weights but a complete blueprint for configuring the entire chip to execute that specific network with maximum efficiency.
-
-**Hailo 8 AI Inference on Python**
-The Python code is structured into three main stages that run in parallel using separate threads to exploit the .hef file from the compiler.
-
-* **Pre-processing:** This stage reads video frames from a camera or file, prepares them for the AI model (resizing, color conversion), and puts them into an input_queue.
-* **Inference:** This stage, handled by the Hailo-8, takes the prepared frames from the input_queue, performs object detection, and places the results into an output_queue.
-* **Post-processing:** This stage takes the inference results and the original video frames from the output_queue, draws bounding boxes on the frames, and displays them on the screen.
-In particular, asynchronous inference engine,
-
-```python
-hailo_inference = HailoAsyncInference(
-    net_path, input_queue, output_queue, batch_size, send_original_frame=True
-)
-
-```
-
-creates an instance of the Hailo inference engine. It's the main bridge between your Python application and the Hailo hardware. It automatically handles loading the optimized .hef file onto the NPU,managing the data queues (input_queue, output_queue), continuously feeding image data from the input queue to the Hailo-8 over the PCIe bus, and keeping the NPU's processing pipeline full to achieve maximum throughput. This is initiated by the following line.
-
-```python
-hailo_inference.run()
-
-```
-
-This allows neural network calculations to be offloaded to Hailo 8 NPU, while Jetson’s CPU and GPU handle the data pipeline and user interface.

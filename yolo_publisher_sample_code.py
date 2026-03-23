@@ -36,10 +36,28 @@ class YoloJsonPublisher(Node):
         
         # self.publisher_ = 
         ###############################################################
+        
         # Load YOLOv11 base model (Not Pose, Not Seg) onto the Jetson's GPU
         self.get_logger().info("Loading YOLOv11 model on CUDA...")
-        self.model = YOLO('yolo11n.pt') 
-        self.model.to('cuda:0')
+        
+        ###############################################################
+        # TODO 3: Select a model name and size to run. yolo11n (nano) would serve you well, but you can use a different model.
+        # Also, select the optimization level you want for YOLO v11
+        # CUDA - Use Nvidia GPU without optimizations
+        # CUDA+TensorRT - Use Nvidia GPU with performance optimization
+
+        # Note: It would take a long time to load the model when it is your first time. 
+        
+        # Option 1: CUDA:               self.model = YOLO('yolo11n.pt')
+        #                               self.model.to('cuda:0')
+        
+        # Works only if you have created the engine file using the provided demo code and copied it to the same folder as this code.
+        # Option 2: CUDA+TensorRT:      self.model = YOLO('yolo11n.engine') 
+        
+        # self.model =
+
+        ###############################################################
+        
         
         # GStreamer pipeline for Raspberry Pi V2 Camera on Jetson CSI port
         gstreamer_pipeline = (
@@ -56,7 +74,7 @@ class YoloJsonPublisher(Node):
             self.get_logger().error("Failed to open camera.")
             return
         ###############################################################
-        # TODO 3: Create a timer that triggers your callback function to capture frames
+        # TODO 4: Create a timer that triggers your callback function to capture frames
         # Hint: self.create_timer(timer_period_in_seconds, callback_function)
         # Set it to run every 0.05 seconds (20 Hz), and call `self.timer_callback`
         # self.timer = 
@@ -89,22 +107,24 @@ class YoloJsonPublisher(Node):
                 "confidence": confidence,
                 "bbox": {"cx": x_center, "cy": y_center, "w": width, "h": height}
             })
+            
         ###############################################################
-        # TODO 4: Convert the `detection_data` Python dictionary into a JSON formatted string
+        # TODO 5: Convert the `detection_data` Python dictionary into a JSON formatted string
         # Hint: Use the json.dumps() function
         # json_str = 
       
         ###############################################################
       
         ###############################################################
-        # TODO 5: Create your ROS 2 String message and publish it
+        # TODO 6: Create your ROS 2 String message and publish it
         # Hint:
         # msg = String()
         # msg.data = your_json_string
         # self.publisher_.publish(msg_variable)
       
-        msg = String()
-        msg.data = json_str
+        # msg = 
+        # msg.data = 
+        # self.publisher_.publish()
         ###############################################################
 
     def destroy_node(self):
@@ -112,19 +132,23 @@ class YoloJsonPublisher(Node):
         super().destroy_node()
 
 def main(args=None):
+    
         ###############################################################
-        # TODO 6: Initialize the ROS 2 Python client library
-        # Hint: rclpy.init with necessary arguments
+        # TODO 7: Initialize the ROS 2 Python client library
+        # Hint: rclpy.init with necessary arguments (args)
         
         ###############################################################
+    
         node = YoloJsonPublisher()
         
         try:
+            
             ###############################################################
-            # TODO 7: Spin the node so it stays alive and continues to trigger the timer
-            # Hint: rclpy.spin with necessary arguments
+            # TODO 8: Spin the node so it stays alive and continues to trigger the timer
+            # Hint: rclpy.spin with the necessary arguments that define what to spin
           
             ###############################################################
+            
         except KeyboardInterrupt:
             pass
         finally:
