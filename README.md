@@ -249,7 +249,7 @@ This part demonstrates your ability to run various YOLOv11 models on the Jetson'
 
 * **Publisher and Subscriber (YOLOv11):** Run the completed sample code for YOLOv11 publisher and subscriber. Point the camera at several different objects (e.g., a person, a bottle, a laptop) and show that two different programs can exchange necessary information over ROS2.
 
-**Part C: ROS2 Publisher & Subscriber Demonstration With Physical Turtlebot -  -70 points**
+**Part C: ROS2 Control Demonstration With Physical Turtlebot -  -70 points**
 
 This part showcases your ability to integrate the given ROS2 code for a robotic task.
 
