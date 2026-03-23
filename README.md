@@ -66,7 +66,7 @@ In order to complete the demonstration requirements outlined below, we are provi
 
 These object was chosen after testing with generic MS COCO trained yolo v11 on various angles and distances for the most stable inference results. You will find that under certain conditions, YOLO can detect but mislabel objects. You might have to consider multiple labels from YOLO’s COCO dataset to be a particular object of interest (e.g., a Teddy bear can be detected as a donut if the camera view is not just right. You can have some logic, such as if teddy bear and donut, this is a bear doll).
 
-### Part 1: Object Detection on Jetson with CUDA 
+### Part 1: Object Detection on Jetson Demo with CUDA and TensorRT 
 
 Part 1 will show you how to run YOLO, a popular object detection and localization algorithm on the Jetson NX. Jetson allows developers to start developing Artificial Intelligence applications on Edge devices with familiar tools present on a normal desktop environment for Nvidia GPUs.
 
@@ -98,16 +98,16 @@ cd ~/Robotics_Assignment_4/Assignment_4_demo/CUDA_Demo
 ```
 
 
-4. **[Turtlebot Nvidia Jeston]** Run yolo v11 demo and point the camera in front of the robot at various objects. You should see real-time bounding boxes and class labels.
+4. **[Turtlebot Nvidia Jeston]** Run yolo v11 demo and point the camera in front of the robot at various objects. You should see real-time bounding boxes and class labels. **It is highly recommended for you to do this step every time before coding your custom scripts involving Jetson's camera to verify the operation of the hardware.**
 ```bash
 python3 yolov11_demo.py
 
 ```
 
 
-**[Optional][Turtlebot Nvidia Jeston]** YOLO has different sized models with different computational requirements for real-time performance. We encourage you to experiment with different models for each script by replacing the names for engine and pt with different model names corresponding to size of the models. Listed from smallest to largest, these models trade inference speed and accuracy. After you replace the names, the Ultralytics package will automatically download and generate relevant files for you. Note that your frame per second would be bottlenecked by the camera’s sensor mode.
+**[Optional][Turtlebot Nvidia Jeston]** YOLO has different-sized models with different computational requirements for real-time performance. We encourage you to experiment with different models for each script by replacing the names for engine and pt with different model names corresponding to size of the models. Listed from smallest to largest, these models trade inference speed and accuracy. After you replace the names, the Ultralytics package will automatically download and generate relevant files for you. Note that your frame per second would be bottlenecked by the camera’s sensor mode.
 
-Relevant code section. Please change names of both pt and engine files.
+The following mentions the relevant code section. Please change the names of both the pt and engine files.
 
 ```python
 ENGINE = "yolo11n.engine"
@@ -136,7 +136,7 @@ Take a look at the provided publisher and subscriber script for YOLO in the git 
 
 Onvr you have finished coding your publisher and subscriber by completing the skeleton code, execute the example code for the publisher on the Turtlebot Jetson, and execute the example code for the subscriber either on the Turtlebot Jetson or the Remote PC to test the functionality of the code.
 
-Here is what you can expect from the completed skeleton code. Note that launching the publisher for the first time would take a lot of time, since it needs to download the weights from the internet.
+Here is what you can expect from the completed skeleton code. **Note that launching the publisher for the first time would take a lot of time, since it needs to download the weights from the internet.**
 
 **Publisher(Option1:CUDA)**
 ```
@@ -226,7 +226,7 @@ To turn the turtlebot on its place, apply angular velocity in the Z axis so that
 
 To move the turtlebot forward and backward, apply linear velocity so that the turtlebot can move forward or backward.
 
-In order for the turtlebot to react to the camera input, you would need to subscribe to the YOLO output from the publisher you coded in Part 2, and apply control inputs to the turtlebot so that the target object, the bottle, stays at the center of the camera's field of view. Not only do you have to adjust the rotation of the turtlebot, but you would also need to drive forward and backward so that the detection box in pixel coordinates is in a certain range that you determined from your own experimentation. 
+For the turtlebot to react to the camera input, you would need to subscribe to the YOLO output from the publisher you coded in Part 2, and apply control inputs to the turtlebot so that the target object, the bottle, stays at the center of the camera's field of view. Not only do you have to adjust the rotation of the turtlebot, but you would also need to drive forward and backward so that the detection box in pixel coordinates is in a certain range that you determined from your own experimentation. 
 
 To pick up the bottle with the robot arm, move the robot arm to home pose, open the gripper, extend the arm forward, close the gripper, and retract the arm to the home position. Do the reverse for placing the bottle on the ground.
 
@@ -251,7 +251,7 @@ This part demonstrates your ability to run various YOLOv11 models on the Jetson'
 
 **Part C: ROS2 Publisher & Subscriber Demonstration With Physical Turtlebot -  -70 points**
 
-This part showcases your ability to integrate the given ROS2 codes for a robotic task.
+This part showcases your ability to integrate the given ROS2 code for a robotic task.
 
 * a): Demonstrating Visual Servoing to a Bottle (Task 1) -20 points
 
