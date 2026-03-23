@@ -218,7 +218,7 @@ nvidia@nvidia-desktop:~$ python3 sub.py
 ```
 ### Part 3: Programming a Custom Script for Physical Turtlebot3 Bottle Pick and Place
 
-In part 3, you need to extend your teleoperation code in Assignment 3 and ROS2 subscriber code in Assignment 4 to make the turtlebot autonomously detect, approach, and pick up and place the bottle from and to the ground. 
+In part 3, you need to extend your teleoperation code in Assignment 3 and ROS2 subscriber code in Assignment 4 to make the turtlebot autonomously detect, approach, and pick up and place the bottle from and to the ground. We recommend having a single custom script for part 3 of the assignment.
 
 In order to complete part 3, you need to learn how to use ROS 2 to command the turtlebot using your own program. 
 
@@ -249,7 +249,7 @@ This part demonstrates your ability to run various YOLOv11 models on the Jetson'
 
 * **Publisher and Subscriber (YOLOv11):** Run the completed sample code for YOLOv11 publisher and subscriber. Point the camera at several different objects (e.g., a person, a bottle, a laptop) and show that two different programs can exchange necessary information over ROS2.
 
-**Part C: ROS2 Control Demonstration With Physical Turtlebot -  -70 points**
+**Part C: ROS2 Control Demonstration With Physical Turtlebot - 70 points**
 
 This part showcases your ability to integrate the given ROS2 code for a robotic task.
 
@@ -266,7 +266,7 @@ For part C's b), you need to extend a)’s code so that the Turtlebot 3 faces th
 
 * c): Pick and Place with Turtlebot (Task 2) -20 points
 
-For part C's c), you need to extend a)’s code so that the Turtlebot 3 returns to the base you define after picking up the bottle, and release the bottle on the ground at the home base near the robot's starting location. To test, refer to part C's b). 
+For part C's c), you need to extend b)’s code so that the Turtlebot 3 returns to the base you define after picking up the bottle, and release the bottle on the ground at the home base near the robot's starting location. To test, refer to part C's b). 
 
 ---
 
