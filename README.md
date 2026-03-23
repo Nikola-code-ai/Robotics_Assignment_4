@@ -245,7 +245,7 @@ This part demonstrates your ability to run various YOLOv11 models on the Jetson'
 
 * **Prove CUDA Usage:** While the YOLOv11 models are running, open a new terminal and run `tegrastats`. You must show the output of `tegrastats`, which should indicate that the CUDA cores are active and under load, confirming that inference is running on the CUDA cores.
 
-**Part B: YOLOv11 Demonstration on Jetson GPU -20 points**
+**Part B: YOLOv11 Publisher and Subscriber Demonstration-20 points**
 
 * **Publisher and Subscriber (YOLOv11):** Run the completed sample code for YOLOv11 publisher and subscriber. Point the camera at several different objects (e.g., a person, a bottle, a laptop) and show that two different programs can exchange necessary information over ROS2.
 
