@@ -5,31 +5,38 @@ This guide details the exact procedure for running your autonomous pick-and-plac
 ## 0. Preparation
 1. Identify a target object (e.g., a bottle or cup) and place it on the floor.
 2. Ensure the TurtleBot3 and the OpenManipulator-X arm are both powered on.
-3. Establish a connection to the Nvidia Jetson (e.g., via SSH from your Remote PC or using a direct monitor/keyboard).
-4. Navigate to your cloned workspace directory:
+3. Connect both the Jetson and your Remote PC to the local router:
+   - **SSID:** `small_blue_wifi`
+   - **Password:** `turtlebot`
+   > **Note:** This network has no internet access. Do not press the reset button on the router if you have trouble connecting.
+4. Establish a connection to the Nvidia Jetson (e.g., via SSH from your Remote PC or using a direct monitor/keyboard).
+5. **[Jetson]** Navigate to your cloned workspace directory:
    ```bash
    cd ~/Projects/Robotics_Assignment_4
    ```
 
 ## 1. Start Hardware Drivers (Terminal 1)
-First, initialize the hardware interfaces for the base, camera, and robotic arm. 
-*(Use the exact bring-up command provided by your lab instructor. Usually, it resembles the following):*
+**[Jetson]** Initialize the hardware interfaces for the base, camera, and robotic arm using the manipulation bringup:
 ```bash
-# Example bring-up commands for Humble:
-ros2 launch turtlebot3_bringup robot.launch.py
-# In a separate terminal if required for the arm:
 ros2 launch turtlebot3_manipulation_bringup hardware.launch.py
 ```
 
 ## 2. Start the YOLOv11 Vision Node (Terminal 2)
-In a new terminal window (don't forget to source your ROS 2 environment), run the publisher script. This script will tap into the camera stream, load the `yolo11s.pt` model onto the Jetson's GPU, and begin broadcasting detection data.
+**[Jetson]** In a new terminal window (don't forget to source your ROS 2 environment), run the publisher script. This script will tap into the camera stream, load the `yolo11s.pt` model onto the Jetson's GPU, and begin broadcasting detection data.
 ```bash
 python3 yolo_publisher_sample_code.py
 ```
 > **Note:** The very first time you execute this on the lab's Jetson, it may take 10-20 seconds to download the `yolo11s.pt` weights file and initialize the PyTorch CUDA tensors. 
 
 ## 3. Start the Autonomous Controller (Terminal 3)
-In a third terminal window, launch your main state machine script. This script acts as both your manual teleoperation node and your autonomous brain.
+**[Jetson or Remote PC]** In a third terminal window, launch your main state machine script. This script acts as both your manual teleoperation node and your autonomous brain.
+
+If running from the **Remote PC** (Docker shell):
+```bash
+cd ~/turtlebot_docker/my_code
+python3 sample_code.py
+```
+If running directly from the **Jetson**:
 ```bash
 python3 sample_code.py
 ```
@@ -53,6 +60,28 @@ To fulfill the assignment criteria and show the TA, press one of the following n
 - **`c`** : Immediately cancel the autonomous mode and halt.
 
 ## Troubleshooting
+
+- **Camera not recognized / "Failed to open camera":** The YOLO publisher uses a Jetson CSI GStreamer pipeline (`nvarguscamerasrc`), not a standard USB camera. Run through these checks in order:
+  1. Confirm the CSI ribbon cable is firmly seated on both the camera and the Jetson.
+  2. Verify the `nvargus-daemon` is running (required by `nvarguscamerasrc`):
+     ```bash
+     sudo systemctl status nvargus-daemon
+     # If not running:
+     sudo systemctl start nvargus-daemon
+     ```
+  3. Test the GStreamer pipeline directly (bypasses Python/ROS entirely):
+     ```bash
+     gst-launch-1.0 nvarguscamerasrc ! nvvidconv ! autovideosink
+     ```
+  4. Confirm OpenCV was built with GStreamer support:
+     ```bash
+     python3 -c "import cv2; print(cv2.getBuildInformation())" | grep -i gstreamer
+     ```
+     You must see `YES` next to GStreamer. If not, OpenCV needs to be recompiled with GStreamer enabled.
+  5. If you have multiple cameras, specify the sensor ID explicitly in `yolo_publisher_sample_code.py`:
+     ```python
+     "nvarguscamerasrc sensor-id=0 ! ..."
+     ```
 - **Robot is not detecting the object:** Make sure the object matches the classes in your whitelist (`bottle`, `bear`, `mouse`, `teddy bear`, `donut`, `cup`, `cell phone`) and the room is well-lit.
-- **Arm is not moving:** Verify that the Action Servers (`/arm_controller/follow_joint_trajectory` and `/gripper_controller/gripper_cmd`) successfully started without crashing in Terminal 1.
+- **Arm is not moving:** Verify that the Action Servers (`/arm_controller/follow_joint_trajectory` and `/gripper_controller/gripper_cmd`) successfully started without crashing in Terminal 1. You can check with `ros2 action list` from any shell on the same network.
 - **Robot spins erratically:** Ensure the camera is mounted perfectly straight. If it's tilted, the `x_center` calculation will constantly try to correct an impossible offset.
