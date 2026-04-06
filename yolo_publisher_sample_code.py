@@ -48,13 +48,13 @@ class YoloJsonPublisher(Node):
 
         # Note: It would take a long time to load the model when it is your first time. 
         
-        # Option 1: CUDA:               self.model = YOLO('yolo11n.pt')
+        # Option 1: CUDA:               self.model = YOLO('yolo11s.pt')
         #                               self.model.to('cuda:0')
         
         # Works only if you have created the engine file using the provided demo code and copied it to the same folder as this code.
-        # Option 2: CUDA+TensorRT:      self.model = YOLO('yolo11n.engine') 
+        # Option 2: CUDA+TensorRT:      self.model = YOLO('yolo11s.engine') 
         
-        self.model = YOLO('yolo11n.pt')
+        self.model = YOLO('yolo11s.pt')
         self.model.to('cuda:0')
         ###############################################################
         
