@@ -54,7 +54,7 @@ class YoloJsonPublisher(Node):
         # Works only if you have created the engine file using the provided demo code and copied it to the same folder as this code.
         # Option 2: CUDA+TensorRT:      self.model = YOLO('yolo11s.engine') 
         
-        self.model = YOLO('yolo11s.pt')
+        self.model = YOLO('yolo11n.pt')
         self.model.to('cuda:0')
         ###############################################################
         
